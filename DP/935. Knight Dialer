@@ -1,0 +1,42 @@
+class Solution {
+    private static final int MOD = 1000000007;
+
+    public int knightDialer(int n) {
+        int[][] dir = new int[][]{{-2, 1}, {-1, 2}, {1, 2}, {2, 1}, {2, -1}, {1, -2}, {-1, -2}, {-2, -1}};
+        int[][][] memo = new int[4][3][n];
+        for(int[][] arr : memo){
+            for(int[] dp : arr){
+                Arrays.fill(dp, -1);
+            }
+        }
+
+        int count = 0;
+
+        for(int r = 0; r < 4; r++){
+            for(int c = 0; c < 3; c++){
+                count = (count + dp(r, c, 1, n, memo, dir)) % MOD;
+            }
+        }
+        return count;
+    }
+
+    public int dp(int r, int c, int cur, int n, int[][][] memo, int[][] dirs){
+        
+        if(r < 0 || r >= 4 || c < 0 || c >= 3
+            || (r == 3 && c == 0) || (r == 3 && c == 2)) 
+            return 0;
+        
+        if(cur == n) return 1;
+
+        if(memo[r][c][cur] != -1) return memo[r][c][cur];
+
+        int count = 0;
+
+        for(int[] dir : dirs){
+            count = (count + dp(r + dir[0], c + dir[1], cur + 1, n, memo, dirs)) % MOD;
+        }
+
+        memo[r][c][cur] = count;
+        return count;        
+    }
+}
